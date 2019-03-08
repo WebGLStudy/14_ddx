@@ -184,15 +184,16 @@
             'out vec4 outColor;',
 
             'void main(void) {',
-                'vec3 view_dir = normalize(camera_pos - vPosition);',
                 'vec3 dPosdx = dFdx(vPosition);',
                 'vec3 dPosdy = dFdy(vPosition);',
                 'vec2 dUVdx = dFdx(vUv);',
                 'vec2 dUVdy = dFdy(vUv);',
-                'vec3 T = normalize(+dPosdy * dUVdy.y + dPosdx * dUVdx.y);',
-                'vec3 B = normalize(+dPosdy * dUVdy.x + dPosdx * dUVdx.x);',
+                'vec3 T = -dPosdx * dUVdy.y - dPosdy * dUVdx.y;',
+                'vec3 B = +dPosdx * dUVdy.x + dPosdy * dUVdx.x;',
                 'vec3 normal = normalize(cross(T, B));',
                 
+                'vec3 view_dir = normalize(camera_pos - vPosition);',
+
                 'float f0 = 0.3;',
                 'float f = f0 + (1.0 - f0) * pow(1.0-dot(view_dir, normal), 5.0);', // フレネル項
                 'vec3 ref = f * texture(sampCube, reflect(-view_dir, normal) * vec3(-1,1,1)).rgb;',
@@ -397,7 +398,7 @@
             // カメラを回すパラメータ
             angle += 0.0001 * elapsedTime;
             if(1.0 < angle) angle -= 1.0;
-angle = 0.9;
+//angle = 0.9;
             // ワールド行列の生成
             wMatrixWater = mat.identity(mat.create());
 
